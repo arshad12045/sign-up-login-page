@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Step 1: Email Input -->
+    <div id="step-email">
+      <h2>Sign Up - Step 1</h2>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <button onclick="goToUsernameStep()">Next</button>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+    <!-- Step 2: Username & Password -->
+    <div id="step-userpass" style="display: none;">
+      <h2>Sign Up - Step 2</h2>
+      <input type="text" id="signup-username" placeholder="Username" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <button onclick="signup()">Sign Up</button>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <div id="message"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let signupEmail = "";
+
+    function goToUsernameStep() {
+      const emailInput = document.getElementById('signup-email').value.trim();
+
+      if (!emailInput || !emailInput.includes("@")) {
+        showMessage("Please enter a valid email.");
+        return;
+      }
+
+      signupEmail = emailInput;
+      document.getElementById('step-email').style.display = 'none';
+      document.getElementById('step-userpass').style.display = 'block';
+      clearMessage();
+    }
+
+    function signup() {
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value;
+
+      if (!username || !password) {
+        showMessage("Please fill in all fields.");
+        return;
+      }
+
+      // Store email + username as the key
+      const userKey = `${signupEmail}::${username}`;
+
+      if (localStorage.getItem(userKey)) {
+        showMessage("This email and username are already registered.");
+      } else {
+        localStorage.setItem(userKey, password);
+        showMessage("Signup successful. Redirecting to login...");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+      }
+    }
+
+    function showMessage(message) {
+      const msgDiv = document.getElementById('message');
+      if (msgDiv) {
+        msgDiv.textContent = message;
+      }
+    }
+
+    function clearMessage() {
+      const msgDiv = document.getElementById('message');
+      if (msgDiv) {
+        msgDiv.textContent = '';
+      }
+    }
+  </script>
+</body>
+</html>
